@@ -9,8 +9,8 @@ const char* mqtt_server = "soldier.cloudmqtt.com";
 #define mqtt_port 18519
 #define MQTT_USER "yfujbueq"
 #define MQTT_PASSWORD "ayszGMs2RTKd"
-#define MQTT_SERIAL_PUBLISH_CH "esp/test"
-#define MQTT_SERIAL_RECEIVER_CH "esp/test"
+#define MQTT_SERIAL_PUBLISH_CH "testpubish"
+#define MQTT_SERIAL_RECEIVER_CH "testsubscribe"
 
 WiFiClient wifiClient;
 
@@ -46,7 +46,7 @@ void reconnect() {
       Serial.println(clientId);
       Serial.println("connected");
       //Once connected, publish an announcement...
-      client.publish("esp/test", "hello world");
+      //client.publish("esp/test/tx", "hello world");
       // ... and resubscribe
       client.subscribe(MQTT_SERIAL_RECEIVER_CH);
     } else {
@@ -85,10 +85,17 @@ void publishSerialData(char *serialData){
 }
 void loop() {
    client.loop();
+   float temperature = analogRead(A0);
+   float voltage = (temperature / 2048.0) * 3300; // 5000 to get millivots.
+   float tempCelcius = voltage * 0.1;
+   char result[8];
+   dtostrf(tempCelcius, 6, 2, result);
+   publishSerialData(result);
    if (Serial.available() > 0) {
      char mun[501];
      memset(mun,0, 501);
      Serial.readBytesUntil( '\n',mun,500);
      publishSerialData(mun);
-   }
+   } 
+   delay(60000);
  }

@@ -39,6 +39,9 @@ const char* server = "api.thingspeak.com";
 // Thingspeak path & params on that server
 const char* parameters = "/update?api_key=";
 
+//pin for temperature input
+//const int tempPin = 13;
+
 // On a processor with limited run time memory (SRAM) store this long string in PROGMEM (see note in code below)
 // #include <avr/pgmspace.h>
 //const static char fingerprint[] PROGMEM = "f9 c2 65 6c f9 ef 7f 66 8b f7 35 fe 15 ea 82 9f 5f 55 54 3e";
@@ -47,16 +50,12 @@ const char* parameters = "/update?api_key=";
 // SETUP     SETUP     SETUP     SETUP     SETUP     SETUP     SETUP
 // -----------------------------------------------------------------------
 void setup() {
-  // Debug at same speed as the ESP8266 default speed
+  // Debug at same speed as the ESP32 default speed
   Serial.begin(115200);
   delay(10);
 
   // Connect to your local wifi (one time operation)
   connectToWifi();
-
-  // Seed the random number generator
-  // (to ensure no repeating sequences) for uploading some dummy data
-  randomSeed(analogRead(A0));
 }
 
 // -----------------------------------------------------------------------
@@ -66,8 +65,8 @@ void loop() {
   // Upload the data
   uploadDataViaHTTP();
 
-  // Only one update per hour. This is ONLY for Proof of Concept, never do this in live code
-  delay(2000);
+  // Only one update per minute. This is ONLY for Proof of Concept, never do this in live code
+  delay(60000);
 }
 
 
@@ -130,9 +129,11 @@ void uploadDataViaHTTP() {
     Serial.println("Failed to connect, going back to sleep");
   }
 
-  // Let's just store a pseudo temperature value for now
-  long randNo = random(2, 100);
-  Serial.print("Sending pseudo temperature: "); Serial.println(String(randNo));
+  // get temperature
+  float temperature = analogRead(A0);
+  float voltage = (temperature / 2048.0) * 3300; // 5000 to get millivots.
+  float tempCelcius = voltage * 0.1;
+  Serial.print("Sending temperature: "); Serial.println(String(tempCelcius));
 
   // We're communicating via REST (request/response).
   // But you can use MQTT (publish/subscribe), just not in this sketch.
@@ -144,7 +145,7 @@ void uploadDataViaHTTP() {
   Serial.print("Issue GET request to update the Channel's field value: ");
   Serial.println(parameters);
   client.print(
-      String("GET ") + parameters + apiKey + "&field1=" + String(randNo)
+      String("GET ") + parameters + apiKey + "&field1=" + String(tempCelcius)
           + " HTTP/1.1\r\n" + "Host: " + server + "\r\n"
           + "Connection: close\r\n\r\n");
 

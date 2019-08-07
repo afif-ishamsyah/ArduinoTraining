@@ -1,6 +1,6 @@
 //float vref = 3.3;
 //float resolution = vref/2048;
-const int tempPin = 13;
+//const int tempPin = 13;
 const int ledPin = 15;
 const int ledPin2 = 2;
 const int buzzerPin = 4;
@@ -15,7 +15,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  float temperature = analogRead(tempPin);
+  float temperature = analogRead(A0);
   float voltage = (temperature / 2048.0) * 3300; // 5000 to get millivots.
   float tempCelcius = voltage * 0.1;
   float tempFahrenheit = (tempCelcius * 1.8) + 32;
