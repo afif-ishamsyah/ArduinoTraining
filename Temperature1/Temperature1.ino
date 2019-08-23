@@ -3,14 +3,14 @@
 //const int tempPin = 13;
 const int ledPin = 15;
 const int ledPin2 = 2;
-const int buzzerPin = 4;
+//const int buzzerPin = 4;
 
 void setup() {
   // put your setup code here, to run once:
   pinMode(ledPin, OUTPUT);
   pinMode(ledPin2, OUTPUT);
-  pinMode(buzzerPin, OUTPUT);
-  Serial.begin(9600);
+//  pinMode(buzzerPin, OUTPUT);
+  Serial.begin(115200);
 }
 
 void loop() {
@@ -26,6 +26,7 @@ void loop() {
   
   if(tempCelcius < 35)
   {
+    Serial.println(tempCelcius);
     digitalWrite(ledPin, HIGH);   
                                                            
     delay(300);
@@ -34,23 +35,14 @@ void loop() {
     delay(300);
     
   }
-  else if(tempCelcius >= 35 && tempCelcius <=40)
+  else if(tempCelcius >= 35)
   {
+    Serial.println(tempCelcius);
     digitalWrite(ledPin2, HIGH);   
                                                            
     delay(300);
       
     digitalWrite(ledPin2, LOW);
-    delay(300);
-    
-  }
-  else if(tempCelcius > 40)
-  {
-    digitalWrite(buzzerPin, HIGH);   
-                                                           
-    delay(300);
-      
-    digitalWrite(buzzerPin, LOW);
     delay(300);
     
   }
