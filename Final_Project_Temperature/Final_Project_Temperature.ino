@@ -1,7 +1,7 @@
 /*
   Rui Santos
   Complete project details at https://RandomNerdTutorials.com/esp32-esp8266-mysql-database-php/
-  
+   
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files.
   
@@ -28,6 +28,7 @@ const int ledPinLow = 15;
 const int ledPinNormal = 2;
 const int ledPinHigh = 4;
 const int buzzerPin = 13;
+String statusTemp = "";
 /*#include <SPI.h>
 #define BME_SCK 18
 #define BME_MISO 19
@@ -71,24 +72,27 @@ void loop() {
     float voltage = (temperature / 2048.0) * 3300; // 5000 to get millivots.
     float tempCelcius = voltage * 0.1;
 
-    if(tempCelcius < 30)
+    if(tempCelcius < 35)
     {
       digitalWrite(ledPinLow, HIGH);
       digitalWrite(buzzerPin, LOW);
+      statusTemp = "Too Low";
     }
-    else if(tempCelcius >= 30 && tempCelcius <= 35)
+    else if(tempCelcius >= 35 && tempCelcius <= 40)
     {
       digitalWrite(ledPinNormal, HIGH);
       digitalWrite(buzzerPin, LOW);
+      statusTemp = "Normal";
     }
-    else if(tempCelcius > 35)
+    else if(tempCelcius > 40)
     {
       digitalWrite(ledPinHigh, HIGH);
       digitalWrite(buzzerPin, HIGH);
+      statusTemp = "Too High";
     }
     
     // Prepare your HTTP POST request data
-    String httpRequestData = "name=" + sensorName + "&temperature=" + tempCelcius + "";
+    String httpRequestData = "name=" + sensorName + "&temperature=" + tempCelcius + "&status=" + statusTemp + "";
     Serial.print("httpRequestData: ");
     Serial.println(httpRequestData);
     

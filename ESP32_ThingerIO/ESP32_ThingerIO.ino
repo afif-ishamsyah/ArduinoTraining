@@ -10,7 +10,7 @@
 ThingerESP32 thing(USERNAME, DEVICE_ID, DEVICE_CREDENTIAL);
 
 //float tempCelcius = 0;
-int ledPin = 2;
+int ledPin = 15;
 
 void setup() {
   pinMode(ledPin, OUTPUT);

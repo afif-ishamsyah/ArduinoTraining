@@ -3,29 +3,30 @@
 #include <WebServer.h>
 #include <ESPmDNS.h>
 
-const char* ssid = "Esp32webserver";
-const char* password = "afifzaki";
+const char* ssid = "Nyari Koneksi";
+const char* password = "Ampastahu";
 
 WebServer server(80);
 
-const int led1 = LED_BUILTIN;
+const int led1 = 15;
 bool led1status = LOW;
-const int buzzerPin = 15;
+//const int buzzerPin = 15;
 
 void handle_OnConnect() {
   server.send(200, "text/html", SendHTML(led1status));
 }
 
-void handle_led1on() {  led1status = HIGH;
+void handle_led1on() {  
+  led1status = HIGH;
   server.send(200, "tex /html", SendHTML(led1status));
-  digitalWrite(buzzerPin, HIGH);  
+  //digitalWrite(buzzerPin, HIGH);  
   Serial.println("LED dinyalakan.");
 }
 
 void handle_led1off() {
   led1status = LOW;
   server.send(200, "text/html", SendHTML(led1status));
-  digitalWrite(buzzerPin, LOW); 
+  //digitalWrite(buzzerPin, LOW); 
   Serial.println("LED dimatikan.");
 }
 
@@ -46,7 +47,7 @@ void handleNotFound() {
 
 void setup(void) {
   pinMode(led1, OUTPUT);
-  pinMode(buzzerPin, OUTPUT);
+  //pinMode(buzzerPin, OUTPUT);
   Serial.begin(115200);
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
@@ -79,9 +80,9 @@ void setup(void) {
 void loop(void) {
   server.handleClient();
   if (led1status) {
-    digitalWrite(led1, 1);}   // LED1 seharusnya menyala
+    digitalWrite(led1, HIGH);}   // LED1 seharusnya menyala
   else {
-    digitalWrite(led1, 0);}   // LED1 seharusnya menyala
+    digitalWrite(led1, LOW);}   // LED1 seharusnya mati
 }
 
 String SendHTML(uint8_t led1stat){

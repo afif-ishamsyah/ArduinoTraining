@@ -1,17 +1,13 @@
-/*
-  Rui Santos
-  Complete project details at https://RandomNerdTutorials.com/esp32-esp8266-mysql-database-php/
-  
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files.
-  
-  The above copyright notice and this permission notice shall be included in all
-  copies or substantial portions of the Software.
-
-*/
 
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <ThingerESP32.h>
+
+#define USERNAME "afif_ishamsyah"
+#define DEVICE_ID "device_001"
+#define DEVICE_CREDENTIAL "U5a!bzxwZDIX"
+
+ThingerESP32 thing(USERNAME, DEVICE_ID, DEVICE_CREDENTIAL);
 
 // Replace with your network credentials
 const char* ssid     = "Nyari Koneksi";
@@ -24,7 +20,7 @@ const char* serverName = "http://18.209.76.203/LightData.php";
 // If you change the apiKeyValue value, the PHP file /post-esp-data.php also needs to have the same key 
 
 String sensorName = "Device001";
-//const int ldrPin = 4;
+const int ledPin = 13;
 int val = 0;
 int valAfter = 0;
 int sensorValue = 0;
@@ -39,7 +35,10 @@ String deviceName = "LDR001";
 
 void setup() {
   Serial.begin(115200);
-  //pinMode(ldrPin, INPUT);
+  
+  pinMode(ledPin, OUTPUT);
+  thing.add_wifi(ssid, password);
+  thing["led"] << digitalPin(ledPin);
   
   WiFi.begin(ssid, password);
   Serial.println("Connecting");
@@ -56,6 +55,7 @@ void loop() {
   //Check WiFi connection status
   if(WiFi.status()== WL_CONNECTED)
   {
+    thing.handle();
     HTTPClient http;
     
     // Your Domain name with URL path or IP address with path
@@ -112,5 +112,5 @@ void loop() {
     Serial.println("WiFi Disconnected");
   }
   //Send an HTTP POST request every 30 seconds
-  delay(5000);  
+  //delay(5000);  
 }
