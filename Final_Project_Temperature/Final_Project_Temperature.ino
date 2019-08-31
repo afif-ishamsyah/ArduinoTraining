@@ -1,17 +1,8 @@
-/*
-  Rui Santos
-  Complete project details at https://RandomNerdTutorials.com/esp32-esp8266-mysql-database-php/
-   
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files.
-  
-  The above copyright notice and this permission notice shall be included in all
-  copies or substantial portions of the Software.
 
-*/
 
 #include <WiFi.h>
 #include <HTTPClient.h>
+
 
 // Replace with your network credentials
 const char* ssid     = "Nyari Koneksi";
@@ -72,19 +63,19 @@ void loop() {
     float voltage = (temperature / 2048.0) * 3300; // 5000 to get millivots.
     float tempCelcius = voltage * 0.1;
 
-    if(tempCelcius < 35)
+    if(tempCelcius < 33)
     {
       digitalWrite(ledPinLow, HIGH);
       digitalWrite(buzzerPin, LOW);
       statusTemp = "Too Low";
     }
-    else if(tempCelcius >= 35 && tempCelcius <= 40)
+    else if(tempCelcius >= 33 && tempCelcius <= 35)
     {
       digitalWrite(ledPinNormal, HIGH);
       digitalWrite(buzzerPin, LOW);
       statusTemp = "Normal";
     }
-    else if(tempCelcius > 40)
+    else if(tempCelcius > 35)
     {
       digitalWrite(ledPinHigh, HIGH);
       digitalWrite(buzzerPin, HIGH);
